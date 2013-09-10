@@ -1,0 +1,43 @@
+<project>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.carlspring.maven</groupId>
+    <artifactId>ldap-maven-plugin</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.carlspring.maven</groupId>
+                <artifactId>ldap-maven-plugin</artifactId>
+
+                <configuration>
+
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>start</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>import</id>
+                        <goals>
+                            <goal>import</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
