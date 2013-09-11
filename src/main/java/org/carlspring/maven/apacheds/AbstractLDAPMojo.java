@@ -16,6 +16,17 @@ package org.carlspring.maven.apacheds;
  * limitations under the License.
  */
 
+import javax.naming.NamingException;
+import java.io.IOException;
+
+import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.api.ldap.model.name.Dn;
+import org.apache.directory.server.core.api.DirectoryService;
+import org.apache.directory.server.core.api.InstanceLayout;
+import org.apache.directory.server.core.factory.DefaultDirectoryServiceFactory;
+import org.apache.directory.server.core.partition.impl.avl.AvlPartition;
+import org.apache.directory.server.ldap.LdapServer;
+import org.apache.directory.server.protocol.shared.transport.TcpTransport;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -32,45 +43,90 @@ public abstract class AbstractLDAPMojo
     @Parameter(readonly = true, property = "project", required = true)
     private MavenProject project;
 
-    @Parameter(property = "basedir")
-    private String basedir;
+    /**
+     * ApacheDS Instance name.
+     */
+    @Parameter( property = "apacheds.instanceName", defaultValue = "exampleInstance" )
+    private String instanceName;
 
     /**
-     * The port to start Derby on.
+     * ApacheDS Instance path (where to create the server's database)
      */
-    @Parameter(property = "ldap.port")
+    @Parameter( property = "apacheds.instancePath", defaultValue = "${project.build.directory}/apacheds-server" )
+    private String instancePath;
+
+    /**
+     * The base DN
+     */
+    @Parameter( property = "apacheds.baseDN", defaultValue = "o=exampleOrganization")
+    private String baseDN;
+
+    /**
+     * Server IP/host
+     */
+    @Parameter( property = "apacheds.host", defaultValue = "localhost")
+    private String host;
+
+    /**
+     * Server port
+     */
+    @Parameter( property = "apacheds.port", defaultValue = "389")
     private int port;
 
-    /**
-     * The username to use when authenticating.
-     */
-    @Parameter(property = "ldap.username")
-    private String username;
-
-    /**
-     * The password to use when authenticating.
-     */
-    @Parameter(property = "ldap.password")
-    private String password;
-
-    /**
-     * The directory to place the apacheds files in.
-     */
-    @Parameter(property = "ldap.home", defaultValue = "${project.build.directory}/apacheds")
-    private String ldapHome;
+    DirectoryService directoryService;
+    LdapServer ldapServer;
 
 
     @Override
     public void execute()
             throws MojoExecutionException, MojoFailureException
     {
-        setupApacheDS();
+        try
+        {
+            setupApacheDS();
+        }
+        catch (IOException e)
+        {
+            throw new MojoFailureException("IOException while initializing ApacheDS", e);
+        }
+        catch (LdapException e)
+        {
+            throw new MojoExecutionException("LdapException while initializing ApacheDS", e);
+        }
+        catch (NamingException e)
+        {
+            throw new MojoExecutionException("NamingException while initializing ApacheDS", e);
+        }
+        catch (Exception e)
+        {
+            throw new MojoExecutionException("Exception while initializing ApacheDS", e);
+        }
     }
 
     protected void setupApacheDS()
-            throws MojoExecutionException
+            throws Exception, IOException, LdapException, NamingException
     {
-        // TODO
+
+        DefaultDirectoryServiceFactory factory = new DefaultDirectoryServiceFactory();
+        factory.init(getInstanceName());
+
+        directoryService = factory.getDirectoryService();
+        directoryService.getChangeLog().setEnabled(false);
+        directoryService.setShutdownHookEnabled(true);
+
+        InstanceLayout il = new InstanceLayout(getInstancePath());
+        directoryService.setInstanceLayout(il);
+
+        AvlPartition partition = new AvlPartition(directoryService.getSchemaManager());
+        partition.setId(getInstanceName());
+        partition.setSuffixDn(new Dn(directoryService.getSchemaManager(), getBaseDN()));
+        partition.initialize();
+        directoryService.addPartition(partition);
+
+        ldapServer = new LdapServer();
+        ldapServer.setTransports(new TcpTransport(getHost(), getPort()));
+        ldapServer.setDirectoryService(directoryService);
+
     }
 
     public MavenProject getProject()
@@ -83,6 +139,46 @@ public abstract class AbstractLDAPMojo
         this.project = project;
     }
 
+    public String getInstanceName()
+    {
+        return instanceName;
+    }
+
+    public void setInstanceName(String instanceName)
+    {
+        this.instanceName = instanceName;
+    }
+
+    public String getInstancePath()
+    {
+        return instancePath;
+    }
+
+    public void setInstancePath(String instancePath)
+    {
+        this.instancePath = instancePath;
+    }
+
+    public String getBaseDN()
+    {
+        return baseDN;
+    }
+
+    public void setBaseDN(String baseDN)
+    {
+        this.baseDN = baseDN;
+    }
+
+    public String getHost()
+    {
+        return host;
+    }
+
+    public void setHost(String host)
+    {
+        this.host = host;
+    }
+
     public int getPort()
     {
         return port;
@@ -92,45 +188,4 @@ public abstract class AbstractLDAPMojo
     {
         this.port = port;
     }
-
-    public String getUsername()
-    {
-        return username;
-    }
-
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
-
-    public String getPassword()
-    {
-        return password;
-    }
-
-    public void setPassword(String password)
-    {
-        this.password = password;
-    }
-
-    public String getBasedir()
-    {
-        return basedir;
-    }
-
-    public void setBasedir(String basedir)
-    {
-        this.basedir = basedir;
-    }
-
-    public String getLdapHome()
-    {
-        return ldapHome;
-    }
-
-    public void setLdapHome(String ldapHome)
-    {
-        this.ldapHome = ldapHome;
-    }
-
 }

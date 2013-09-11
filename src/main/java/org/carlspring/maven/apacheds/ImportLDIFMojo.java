@@ -16,6 +16,9 @@ package org.carlspring.maven.apacheds;
  * limitations under the License.
  */
 
+import java.io.File;
+
+import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -28,11 +31,36 @@ public class ImportLDIFMojo
         extends StartLDAPMojo
 {
 
+    private File ldifFile;
+
     @Override
     public void execute()
             throws MojoExecutionException, MojoFailureException
     {
-        // TODO
+        try
+        {
+            importLDIFFile();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
+
+    public void importLDIFFile()
+            throws Exception
+    {
+        new LdifFileLoader(directoryService.getAdminSession(), getLdifFile(), null).execute();
+    }
+
+    public File getLdifFile()
+    {
+        return ldifFile;
+    }
+
+    public void setLdifFile(File ldifFile)
+    {
+        this.ldifFile = ldifFile;
+    }
 }

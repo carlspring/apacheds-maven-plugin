@@ -38,8 +38,8 @@ public class StartLDAPMojoTest
         startMojo = (StartLDAPMojo) lookupMojo("start", POM_PLUGIN);
         configureMojo(startMojo);
 
-        stopMojo = (StopLDAPMojo) lookupMojo("stop", POM_PLUGIN);
-        configureMojo(stopMojo);
+        //stopMojo = (StopLDAPMojo) lookupMojo("stop", POM_PLUGIN);
+        //configureMojo(stopMojo);
     }
 
     public void testMojo()
@@ -47,9 +47,9 @@ public class StartLDAPMojoTest
     {
         startMojo.execute();
 
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
 
-        stopMojo.execute();
+        //stopMojo.execute();
     }
 
 }

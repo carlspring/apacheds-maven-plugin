@@ -15,10 +15,21 @@ public abstract class AbstractLDAPMojoTest
 
     protected void configureMojo(AbstractLDAPMojo mojo)
     {
-        mojo.setLdapHome(System.getProperty("basedir") + "/target/apacheds");
-        mojo.setPort(10389);
-        mojo.setUsername("admin");
-        mojo.setPassword("secret");
+        mojo.setHost("127.0.0.1");
+        mojo.setPort(10389); // Currently not working.
+        mojo.setInstanceName("examplePluginInstance");
+        mojo.setInstancePath(System.getProperty("basedir") + "/target/apacheds");
+        mojo.setBaseDN("o=examplePluginInstanceOrganization");
+
+        try
+        {
+            mojo.setupApacheDS();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
 }

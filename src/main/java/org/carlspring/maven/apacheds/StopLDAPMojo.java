@@ -33,7 +33,26 @@ public class StopLDAPMojo
     public void execute()
             throws MojoExecutionException, MojoFailureException
     {
-        // TODO
+        try
+        {
+            stopServer();
+        }
+        catch (Exception e)
+        {
+            throw new MojoExecutionException("Could not stop server",e);
+        }
+    }
+
+    public void stopServer()
+            throws Exception, IllegalStateException
+    {
+        if (!ldapServer.isStarted())
+        {
+            throw new IllegalStateException("Service is not running");
+        }
+
+        ldapServer.stop();
+        directoryService.shutdown();
     }
 
 }

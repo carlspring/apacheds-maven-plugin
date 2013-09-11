@@ -16,24 +16,58 @@ package org.carlspring.maven.apacheds;
  * limitations under the License.
  */
 
+import javax.naming.NamingException;
+import java.io.IOException;
+
+import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.api.ldap.model.name.Dn;
+import org.apache.directory.server.core.api.DirectoryService;
+import org.apache.directory.server.core.api.InstanceLayout;
+import org.apache.directory.server.core.factory.DefaultDirectoryServiceFactory;
+import org.apache.directory.server.core.partition.impl.avl.AvlPartition;
+import org.apache.directory.server.ldap.LdapServer;
+import org.apache.directory.server.protocol.shared.transport.TcpTransport;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.bouncycastle.util.IPAddress;
 
 /**
  * @author mtodorov
+ * @author stodorov
  */
 @Mojo(name = "start", requiresProject = false)
 public class StartLDAPMojo
         extends AbstractLDAPMojo
 {
 
-
     @Override
     public void execute()
             throws MojoExecutionException, MojoFailureException
     {
-        // TODO
+        try
+        {
+            startServer();
+        }
+        catch (Exception e)
+        {
+            throw new MojoExecutionException("Could not start server",e);
+        }
+
+
     }
+
+    public void startServer()
+            throws Exception, IllegalStateException
+    {
+        if (ldapServer.isStarted())
+        {
+            throw new IllegalStateException("Service already running");
+        }
+        directoryService.startup();
+        ldapServer.start();
+    }
+
 
 }
