@@ -1,21 +1,21 @@
 version: 1
 
-dn: o=carlspringCorp
+dn: o=carlspring
 objectClass: top
 objectClass: organization
-o: carlspringCorp
+o: carlspring
 
-dn: ou=Groups,o=carlspringCorp
+dn: ou=Groups,o=carlspring
 objectClass: top
 objectClass: organizationalUnit
 ou: Groups
 
-dn: ou=People,o=carlspringCorp
+dn: ou=People,o=carlspring
 objectClass: top
 objectClass: organizationalUnit
 ou: People
 
-dn: uid=strongbox,ou=People,o=carlspringCorp
+dn: uid=strongbox,ou=People,o=carlspring
 objectClass: top
 objectClass: inetOrgPerson
 objectClass: person
@@ -25,7 +25,7 @@ sn: strongbox
 uid: strongbox
 userPassword: password
 
-dn: uid=stevetodorov,ou=People,o=carlspringCorp
+dn: uid=stevetodorov,ou=People,o=carlspring
 objectClass: top
 objectClass: inetOrgPerson
 objectClass: person
@@ -35,7 +35,7 @@ sn: stevetodorov
 uid: stevetodorov
 userPassword: password
 
-dn: uid=martintodorov,ou=People,o=carlspringCorp
+dn: uid=martintodorov,ou=People,o=carlspring
 objectClass: top
 objectClass: inetOrgPerson
 objectClass: person

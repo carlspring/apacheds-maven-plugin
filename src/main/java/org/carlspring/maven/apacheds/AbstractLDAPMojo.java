@@ -58,7 +58,7 @@ public abstract class AbstractLDAPMojo
     /**
      * The base DN
      */
-    @Parameter( property = "apacheds.baseDN", defaultValue = "o=exampleOrganization")
+    @Parameter( property = "apacheds.baseDN", defaultValue = "carlspring")
     private String baseDN;
 
     /**
@@ -73,8 +73,9 @@ public abstract class AbstractLDAPMojo
     @Parameter( property = "apacheds.port", defaultValue = "389")
     private int port;
 
-    DirectoryService directoryService;
-    LdapServer ldapServer;
+    private DirectoryService directoryService;
+
+    private LdapServer ldapServer;
 
 
     @Override
@@ -87,24 +88,24 @@ public abstract class AbstractLDAPMojo
         }
         catch (IOException e)
         {
-            throw new MojoFailureException("IOException while initializing ApacheDS", e);
+            throw new MojoFailureException(e.getMessage(), e);
         }
         catch (LdapException e)
         {
-            throw new MojoExecutionException("LdapException while initializing ApacheDS", e);
+            throw new MojoExecutionException(e.getMessage(), e);
         }
         catch (NamingException e)
         {
-            throw new MojoExecutionException("NamingException while initializing ApacheDS", e);
+            throw new MojoExecutionException(e.getMessage(), e);
         }
         catch (Exception e)
         {
-            throw new MojoExecutionException("Exception while initializing ApacheDS", e);
+            throw new MojoExecutionException(e.getMessage(), e);
         }
     }
 
     protected void setupApacheDS()
-            throws Exception, IOException, LdapException, NamingException
+            throws Exception
     {
 
         DefaultDirectoryServiceFactory factory = new DefaultDirectoryServiceFactory();
@@ -126,7 +127,6 @@ public abstract class AbstractLDAPMojo
         ldapServer = new LdapServer();
         ldapServer.setTransports(new TcpTransport(getHost(), getPort()));
         ldapServer.setDirectoryService(directoryService);
-
     }
 
     public MavenProject getProject()
@@ -188,4 +188,25 @@ public abstract class AbstractLDAPMojo
     {
         this.port = port;
     }
+
+    public DirectoryService getDirectoryService()
+    {
+        return directoryService;
+    }
+
+    public void setDirectoryService(DirectoryService directoryService)
+    {
+        this.directoryService = directoryService;
+    }
+
+    public LdapServer getLdapServer()
+    {
+        return ldapServer;
+    }
+
+    public void setLdapServer(LdapServer ldapServer)
+    {
+        this.ldapServer = ldapServer;
+    }
+
 }

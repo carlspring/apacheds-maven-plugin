@@ -17,10 +17,12 @@ package org.carlspring.maven.apacheds;
  */
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.junit.Ignore;
 
 /**
  * @author mtodorov
  */
+@Ignore
 public class StopLDAPMojoTest
         extends AbstractLDAPMojoTest
 {

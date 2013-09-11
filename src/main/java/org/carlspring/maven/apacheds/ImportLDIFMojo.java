@@ -17,6 +17,7 @@ package org.carlspring.maven.apacheds;
  */
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -33,6 +34,7 @@ public class ImportLDIFMojo
 
     private File ldifFile;
 
+
     @Override
     public void execute()
             throws MojoExecutionException, MojoFailureException
@@ -41,17 +43,16 @@ public class ImportLDIFMojo
         {
             importLDIFFile();
         }
-        catch (Exception e)
+        catch (IOException e)
         {
-            e.printStackTrace();
+            throw new MojoExecutionException(e.getMessage(), e);
         }
     }
 
-
     public void importLDIFFile()
-            throws Exception
+            throws IOException
     {
-        new LdifFileLoader(directoryService.getAdminSession(), getLdifFile(), null).execute();
+        new LdifFileLoader(getDirectoryService().getAdminSession(), getLdifFile().getCanonicalPath()).execute();
     }
 
     public File getLdifFile()
@@ -63,4 +64,5 @@ public class ImportLDIFMojo
     {
         this.ldifFile = ldifFile;
     }
+
 }
