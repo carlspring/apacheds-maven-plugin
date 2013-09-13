@@ -14,22 +14,14 @@ public abstract class AbstractLDAPMojoTest
     protected static final String POM_PLUGIN = TARGET_TEST_CLASSES + "/poms/pom-start.xml";
 
     protected void configureMojo(AbstractLDAPMojo mojo)
+            throws Exception
     {
         mojo.setHost("127.0.0.1");
         mojo.setPort(10389); // Currently not working.
         mojo.setInstanceName("examplePluginInstance");
         mojo.setInstancePath(System.getProperty("basedir") + "/target/apacheds");
-        mojo.setBaseDN("o=examplePluginInstanceOrganization");
-
-        try
-        {
-            mojo.setupApacheDS();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
+        // mojo.setPartitionName("dc=example,dc=com");
+        mojo.setPartitionName("carlspring");
+        mojo.setPartitionDN("o=carlspring");
     }
-
 }

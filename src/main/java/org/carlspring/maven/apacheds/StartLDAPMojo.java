@@ -35,6 +35,7 @@ public class StartLDAPMojo
     {
         try
         {
+            initialize();
             startServer();
         }
         catch (Exception e)
@@ -46,9 +47,9 @@ public class StartLDAPMojo
     public void startServer()
             throws Exception
     {
-        if (getLdapServer().isStarted())
+        if (getLdapServer() != null && getLdapServer().isStarted())
         {
-            throw new IllegalStateException("Service already running!");
+            throw new IllegalStateException("The ApacheDS service is already running!");
         }
 
         getDirectoryService().startup();

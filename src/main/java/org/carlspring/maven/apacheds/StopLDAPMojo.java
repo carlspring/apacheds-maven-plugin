@@ -35,6 +35,7 @@ public class StopLDAPMojo
     {
         try
         {
+            initialize();
             stopServer();
         }
         catch (Exception e)

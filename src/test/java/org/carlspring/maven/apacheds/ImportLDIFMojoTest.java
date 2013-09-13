@@ -16,8 +16,6 @@ package org.carlspring.maven.apacheds;
  * limitations under the License.
  */
 
-import java.io.File;
-
 /**
  * @author mtodorov
  */
@@ -25,35 +23,22 @@ public class ImportLDIFMojoTest
         extends AbstractLDAPMojoTest
 {
 
-    StartLDAPMojo startMojo;
-
     ImportLDIFMojo importMojo;
-
-    StopLDAPMojo stopMojo;
-
 
     protected void setUp()
             throws Exception
     {
         super.setUp();
 
-        startMojo = (StartLDAPMojo) lookupMojo("start", POM_PLUGIN);
-        configureMojo(startMojo);
-
         importMojo = (ImportLDIFMojo) lookupMojo("import", POM_PLUGIN);
         configureMojo(importMojo);
-        importMojo.setLdifFile(new File("target/test-classes/ldap/apacheds.ldif"));
-
-        stopMojo = (StopLDAPMojo) lookupMojo("stop", POM_PLUGIN);
-        configureMojo(stopMojo);
+        importMojo.setLdifFile(System.getProperty("basedir") + "/src/test/resources/ldap/apacheds.ldif");
     }
 
     public void testMojo()
             throws Exception
     {
-        startMojo.execute();
         importMojo.execute();
-        stopMojo.execute();
     }
 
 }

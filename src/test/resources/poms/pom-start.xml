@@ -3,17 +3,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.carlspring.maven</groupId>
-    <artifactId>ldap-maven-plugin</artifactId>
+    <artifactId>apacheds-maven-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.carlspring.maven</groupId>
-                <artifactId>ldap-maven-plugin</artifactId>
+                <artifactId>apacheds-maven-plugin</artifactId>
 
                 <configuration>
-
+                    <host>127.0.0.1</host>
+                    <port>10389</port>
+                    <instanceName>examplePluginInstance</instanceName>
+                    <instancePath>target/apacheds</instancePath>
+                    <partitionName>o=carlspring</partitionName>
+                    <ldifFile>src/test/resources/ldap/apacheds.ldif</ldifFile>
                 </configuration>
 
                 <executions>

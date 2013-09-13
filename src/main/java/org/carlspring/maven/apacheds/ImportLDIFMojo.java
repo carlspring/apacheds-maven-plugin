@@ -17,22 +17,23 @@ package org.carlspring.maven.apacheds;
  */
 
 import java.io.File;
-import java.io.IOException;
 
 import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * @author mtodorov
  */
 @Mojo(name = "import", requiresProject = false)
 public class ImportLDIFMojo
-        extends StartLDAPMojo
+        extends AbstractLDAPMojo
 {
 
-    private File ldifFile;
+    @Parameter(property = "apacheds.importLdif")
+    private String ldifFile;
 
 
     @Override
@@ -41,26 +42,57 @@ public class ImportLDIFMojo
     {
         try
         {
-            importLDIFFile();
+            // Initialize server configuration
+            initialize();
+            // Start server
+            startServer();
+            // Import
+            importLDIF();
+
+            // TODO: Remove this
+            getLog().info("Sleeping for a minute...");
+            Thread.sleep(60000);
+
+            // Start server
+            stopServer();
         }
-        catch (IOException e)
+        catch (Exception e)
         {
-            throw new MojoExecutionException(e.getMessage(), e);
+            e.printStackTrace();
         }
     }
 
-    public void importLDIFFile()
-            throws IOException
+    /**
+     * Import an LDIF file
+     */
+    public void importLDIF()
+            throws MojoExecutionException
     {
-        new LdifFileLoader(getDirectoryService().getAdminSession(), getLdifFile().getCanonicalPath()).execute();
+        if (!ldifFile.isEmpty())
+        {
+            File file = new File(ldifFile);
+            if (file.exists())
+            {
+                getLog().info("Importing LDIF file " + file.toString() + "...");
+
+                LdifFileLoader ldifLoader = new LdifFileLoader(getDirectoryService().getAdminSession(), file.toString());
+                ldifLoader.execute();
+
+                getLog().info("Imported LDIF file " + file.toString() + "...");
+            }
+            else
+            {
+                throw new MojoExecutionException("Importing LDIF file failed because the specified file could not be located!");
+            }
+        }
     }
 
-    public File getLdifFile()
+    public String getLdifFile()
     {
         return ldifFile;
     }
 
-    public void setLdifFile(File ldifFile)
+    public void setLdifFile(String ldifFile)
     {
         this.ldifFile = ldifFile;
     }
