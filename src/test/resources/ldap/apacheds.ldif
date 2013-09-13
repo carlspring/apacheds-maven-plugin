@@ -10,6 +10,20 @@ objectClass: top
 objectClass: organizationalUnit
 ou: Groups
 
+dn: cn=Users,ou=Groups,o=carlspring
+objectClass: top
+objectClass: groupOfNames
+cn: Users
+member: uid=testing,ou=People,o=carlspring
+member: uid=martintodorov,ou=People,o=carlspring
+member: uid=stevetodorov,ou=People,o=carlspring
+
+dn: cn=Admins,ou=Groups,o=carlspring
+objectClass: top
+objectClass: groupOfNames
+cn: Admins
+member: uid=strongbox,ou=People,o=carlspring
+
 dn: ou=People,o=carlspring
 objectClass: top
 objectClass: organizationalUnit
@@ -44,3 +58,4 @@ cn: Martin Todorov
 sn: martintodorov
 uid: martintodorov
 userPassword: password
+
