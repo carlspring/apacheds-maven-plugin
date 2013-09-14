@@ -325,6 +325,44 @@
                 </plugins>
             </build>
         </profile>
+
+        <!--
+        <profile>
+            <id>run-its</id>
+            <activation>
+                <property>
+                    <name>skipTests</name>
+                    <value>!true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-invoker-plugin</artifactId>
+                        <version>1.8</version>
+                        <configuration>
+                            &lt;!&ndash;<debug>true</debug>&ndash;&gt;
+                            <postBuildHookScript>verify</postBuildHookScript>
+                            &lt;!&ndash;<localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>&ndash;&gt;
+                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <goals>
+                                    <goal>install</goal>
+                                    <goal>run</goal>
+                                </goals>
+
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        -->
     </profiles>
 
 </project>

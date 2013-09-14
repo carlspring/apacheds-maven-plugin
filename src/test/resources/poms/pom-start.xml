@@ -18,7 +18,6 @@
                     <instanceName>examplePluginInstance</instanceName>
                     <instancePath>target/apacheds</instancePath>
                     <partitionName>o=carlspring</partitionName>
-                    <ldifFile>src/test/resources/ldap/apacheds.ldif</ldifFile>
                 </configuration>
 
                 <executions>
@@ -33,6 +32,9 @@
                         <goals>
                             <goal>import</goal>
                         </goals>
+                        <configuration>
+                            <ldifFile>src/test/resources/ldap/apacheds.ldif</ldifFile>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>stop</id>

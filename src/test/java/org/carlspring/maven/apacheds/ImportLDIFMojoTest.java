@@ -23,12 +23,21 @@ public class ImportLDIFMojoTest
         extends AbstractLDAPMojoTest
 {
 
+    StartLDAPMojo startMojo;
     ImportLDIFMojo importMojo;
+    StopLDAPMojo stopMojo;
+
 
     protected void setUp()
             throws Exception
     {
         super.setUp();
+
+        startMojo = (StartLDAPMojo) lookupMojo("start", POM_PLUGIN);
+        configureMojo(startMojo);
+
+        stopMojo = (StopLDAPMojo) lookupMojo("stop", POM_PLUGIN);
+        configureMojo(stopMojo);
 
         importMojo = (ImportLDIFMojo) lookupMojo("import", POM_PLUGIN);
         configureMojo(importMojo);
@@ -38,7 +47,9 @@ public class ImportLDIFMojoTest
     public void testMojo()
             throws Exception
     {
+        startMojo.execute();
         importMojo.execute();
+        stopMojo.execute();
     }
 
 }

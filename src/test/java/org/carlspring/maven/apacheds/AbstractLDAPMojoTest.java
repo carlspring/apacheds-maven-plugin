@@ -13,6 +13,7 @@ public abstract class AbstractLDAPMojoTest
     protected static final String TARGET_TEST_CLASSES = "target/test-classes";
     protected static final String POM_PLUGIN = TARGET_TEST_CLASSES + "/poms/pom-start.xml";
 
+
     protected void configureMojo(AbstractLDAPMojo mojo)
             throws Exception
     {
@@ -24,4 +25,5 @@ public abstract class AbstractLDAPMojoTest
         mojo.setPartitionName("carlspring");
         mojo.setPartitionDN("o=carlspring");
     }
+
 }
